@@ -1,0 +1,44 @@
+#Docker container with php-8, apache, phpmyadmin & mariadb 
+version: "3.7"
+
+services:
+  php:
+    build:
+     context: ./
+     dockerfile: php8.Dockerfile
+    container_name: php-8-server
+    ports:
+      - 3000:80
+    #restart: always
+    volumes:
+     - ./html_php_8:/var/www/html
+    environment:
+      DB_HOST: mariadb
+      DB_USER: root
+      DB_PASSWORD: secret
+
+  mariadb:
+    container_name: mariadb_service_php8
+    #restart: always
+    image: mariadb:10.7.1
+    volumes:
+      - mariadb-data:/var/lib/mysql
+    environment:
+      #MYSQL_ROOT_USER: root
+      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_ROOT_HOST: '%'
+    
+  phpmyadmin:
+        container_name: phpmyadmin_service_php8
+        #restart: always
+        image: phpmyadmin:5.1
+        ports:
+            - 3004:80
+        environment:
+            PMA_HOST: mariadb
+
+volumes:
+  mariadb-data:
+  html_php_8:
+  
+  
